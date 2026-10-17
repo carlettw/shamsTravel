@@ -3,6 +3,9 @@ import { API_URL, PROXY_PREFIX, isApiConfigured } from "./lib/api-config";
 
 const nextConfig: NextConfig = {
     devIndicators: false,
+    // Dev rejimda boshqa qurilmadan (telefon, VM) kirish uchun ruxsat etilgan manzillar.
+    // Yangi manzil chiqsa, shu ro'yxatga qo'shib, `npm run dev` ni qayta ishga tushiring.
+    allowedDevOrigins: ["192.168.56.1"],
     outputFileTracingIncludes: {
         "/**": ["./public/locales/**"],
     },

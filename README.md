@@ -141,4 +141,4 @@ avtomatik ko'rsatiladi va so'rov qayta uriniladi.
 
 Loyiha Vercel, Render yoki boshqa Next.js'ni qo'llab-quvvatlaydigan istalgan
 platformaga joylashtirilishi mumkin. Muhim: `NEXT_PUBLIC_API_URL` muhit
-o'zgaruvchisini deploy platformasida ham sozlashni unutmang."# shamsTravel" 
+o'zgaruvchisini deploy platformasida ham sozlashni unutmang.
