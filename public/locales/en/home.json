@@ -1,0 +1,70 @@
+{
+  "hero": {
+    "eyebrow": "Shams Travel — the sun shows the way",
+    "slide_1_title": "Hit the road with the sun",
+    "slide_1_subtitle": "A new place every morning, new impressions every day",
+    "slide_2_title": "Bright journeys, warm memories",
+    "slide_2_subtitle": "We'll find the right route and take care of the rest",
+    "slide_3_title": "Horizon to horizon",
+    "slide_3_subtitle": "Cities, mountains and deserts, all in one trip",
+    "slide_4_title": "A ready tour or your own route",
+    "slide_4_subtitle": "Pick a ready-made one or build a new one with us",
+    "slide_5_title": "Everything ready before sunset",
+    "slide_5_subtitle": "Booking, transport, stays and guide — fast and precise",
+    "slide_6_title": "The next ray of light is your trip",
+    "slide_6_subtitle": "Write today and you'll be on the road soon",
+    "cta_primary": "View tours",
+    "cta_secondary": "Get in touch",
+    "search_placeholder": "Where shall we head?",
+    "search_button": "Search",
+    "search_destinations_label": "Destinations",
+    "search_tours_label": "Tours",
+    "search_no_results": "Nothing found"
+  },
+  "popular": {
+    "eyebrow": "Top picks",
+    "title": "The best tours under the sun",
+    "days_short": "days",
+    "view": "Details",
+    "view_all": "All tours",
+    "nights_short": "nights"
+  },
+  "destinations": {
+    "eyebrow": "Destinations",
+    "title": "Which way?",
+    "subtitle": "Wherever the sun calls, we go",
+    "tours_count": "tours",
+    "explore": "Explore",
+    "view_all": "All destinations"
+  },
+  "stats": {
+    "years": "years of experience",
+    "satisfaction": "happy travelers",
+    "adventures": "trips organized",
+    "travelers": "guests"
+  },
+  "testimonials": {
+    "eyebrow": "Reviews",
+    "title": "What our guests say"
+  },
+  "why": {
+    "eyebrow": "Why Shams?",
+    "title": "So your trip shines",
+    "i1_title": "Clear pricing",
+    "i1_text": "Everything is agreed in advance — no surprise charges on the road.",
+    "i2_title": "Reliable team",
+    "i2_text": "Experienced guides and vetted partners.",
+    "i3_title": "Full service",
+    "i3_text": "Transport, stays, guide and insurance in one place.",
+    "i4_title": "Always in touch",
+    "i4_text": "We answer any question quickly throughout your trip."
+  },
+  "cta": {
+    "title": "Shall we start your trip?",
+    "subtitle": "Call or write — we'll pick the right journey for you.",
+    "phone": "Call",
+    "office": "Address",
+    "email": "Email",
+    "button": "Contact us"
+  }
+}

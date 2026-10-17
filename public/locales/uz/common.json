@@ -1,0 +1,24 @@
+{
+  "nav": {
+    "home": "Bosh sahifa",
+    "tours": "Turlar",
+    "about": "Biz haqimizda",
+    "service": "Xizmatlar",
+    "contact": "Aloqa",
+    "login": "Kirish",
+    "book": "Tur band qilish",
+    "admin_panel": "Admin panel",
+    "profile": "Mening profilim",
+    "logout": "Chiqish"
+  },
+  "footer": {
+    "about": "Shams Travel — sayohatingizni yorug' va tashvishsiz qiladigan sayohat kompaniyasi.",
+    "quick_links": "Tezkor havolalar",
+    "contact": "Aloqa",
+    "address": "Registon ko'chasi, Samarqand",
+    "follow": "Ijtimoiy tarmoqlarda",
+    "rights": "Barcha huquqlar himoyalangan.",
+    "links": "Havolalar",
+    "services": "Xizmatlar"
+  }
+}

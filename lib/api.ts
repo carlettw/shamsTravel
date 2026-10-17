@@ -1,0 +1,378 @@
+import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
+import Cookies from "js-cookie";
+import type {
+    User, LoginPayload, RegisterPayload, AuthTokens,
+    Tour, Country, Destination, Booking, Review, PaginatedResponse,
+    AdminTourDetail, TourPayload,
+    LocalizedText,
+    SiteStats } from "@/types";
+
+import { API_URL, getApiBase } from "@/lib/api-config";
+
+export const api = axios.create({
+    baseURL: getApiBase(),
+    timeout: 60000,
+    headers: {
+        "Content-Type": "application/json",
+    },
+});
+
+export function setTokens(tokens: AuthTokens) {
+    if (typeof window === "undefined" || !tokens) return;
+
+    const isSecure = window.location.protocol === "https:";
+
+    if (tokens.access_token) {
+        Cookies.set("access_token", tokens.access_token, {
+            expires: 7,
+            secure: isSecure,
+            sameSite: "lax",
+        });
+    }
+    if (tokens.refresh_token) {
+        Cookies.set("refresh_token", tokens.refresh_token, {
+            expires: 7,
+            secure: isSecure,
+            sameSite: "lax",
+        });
+    }
+}
+function getAccessToken(): string | undefined {
+    if (typeof window === "undefined") return undefined;
+    return Cookies.get("access_token");
+}
+
+function getRefreshToken(): string | undefined {
+    if (typeof window === "undefined") return undefined;
+    return Cookies.get("refresh_token");
+}
+
+export function clearTokens() {
+    if (typeof window === "undefined") return;
+    Cookies.remove("access_token");
+    Cookies.remove("refresh_token");
+}
+
+export function hasStoredSession(): boolean {
+    return !!getRefreshToken();
+}
+
+api.interceptors.request.use(
+    (config) => {
+        if (typeof window !== "undefined") {
+            const token = getAccessToken();
+
+            if (process.env.NODE_ENV === "development") {
+                console.log(`[Request: ${config.method?.toUpperCase()}] ${config.url} | Token:`, token ? "Mavjud" : "TOPILMADI!");
+            }
+
+            if (token && config.headers) {
+                config.headers.Authorization = `Bearer ${token}`;
+            }
+        }
+        return config;
+    },
+    (error) => Promise.reject(error)
+);
+
+
+function formatErrorDetail(detail: unknown): string {
+    if (!detail) return "Xatolik yuz berdi";
+
+    if (typeof detail === "string") return detail;
+
+    if (Array.isArray(detail)) {
+        const messages = detail.map((item) => {
+            if (item && typeof item === "object") {
+                const loc = Array.isArray((item as { loc?: unknown[] }).loc)
+                    ? (item as { loc: unknown[] }).loc
+                        .filter((part) => part !== "body")
+                        .join(".")
+                    : "";
+                const msg = (item as { msg?: string }).msg ?? JSON.stringify(item);
+                return loc ? `${loc}: ${msg}` : msg;
+            }
+            return String(item);
+        });
+        return messages.join("; ");
+    }
+
+    if (typeof detail === "object") {
+        try {
+            return JSON.stringify(detail);
+        } catch {
+            return "Xatolik yuz berdi";
+        }
+    }
+
+    return "Xatolik yuz berdi";
+}
+
+export interface ApiError extends Error {
+    status?: number;
+    detail?: unknown;
+}
+
+api.interceptors.response.use(
+    (response) => response.data,
+    async (error: AxiosError<{ detail?: unknown }>) => {
+        const originalRequest = error.config as InternalAxiosRequestConfig & {
+            _retry?: boolean;
+            _timeoutRetry?: boolean;
+            _retryCount?: number;
+        };
+
+        // Render bepul rejasi uxlab yotganda: 502/503/504 yoki ulanish uzilishi bo'ladi.
+        // GET so'rovlarni bir necha marta, kutib turib qayta yuboramiz.
+        const status = error.response?.status;
+        const isGet = originalRequest?.method?.toLowerCase() === "get";
+        const wakingUp = !error.response || [502, 503, 504].includes(status ?? 0);
+        const retryCount = originalRequest?._retryCount ?? 0;
+        const maxRetries = wakingUp ? 5 : status === 500 ? 1 : 0;
+        if (isGet && retryCount < maxRetries) {
+            originalRequest._retryCount = retryCount + 1;
+            await new Promise((r) => setTimeout(r, 2000 * (retryCount + 1)));
+            return api(originalRequest);
+        }
+
+        if (error.code === "ECONNABORTED" && originalRequest && !originalRequest._timeoutRetry) {
+            originalRequest._timeoutRetry = true;
+            originalRequest.timeout = 60000;
+            return api(originalRequest);
+        }
+
+        if (error.response?.status === 401 && originalRequest && !originalRequest._retry) {
+            originalRequest._retry = true;
+            const refreshToken = getRefreshToken();
+
+            if (refreshToken) {
+                try {
+                    const res = await axios.post<AuthTokens>(`${getApiBase()}/auth/refresh`, {
+                        refresh_token: refreshToken,
+                    });
+
+                    setTokens(res.data);
+                    originalRequest.headers.Authorization = `Bearer ${res.data.access_token}`;
+
+                    return api(originalRequest);
+                } catch (refreshError) {
+                    clearTokens();
+                    return Promise.reject(refreshError);
+                }
+            }
+        }
+
+        const detail = error.response?.data?.detail;
+        const message = error.code === "ERR_INVALID_URL" || !API_URL
+            ? "Backend manzili sozlanmagan: .env.local faylida NEXT_PUBLIC_API_URL ni to'liq URL ko'rinishida yozing (masalan https://your-backend.onrender.com/api/v1) va serverni qayta ishga tushiring."
+            : error.response
+            ? formatErrorDetail(detail)
+            : `Server bilan bog'lanib bo'lmadi (${error.code ?? "network error"}: ${error.message}). Sabablari: CORS ruxsat yo'q, backend o'chgan/uxlab yotibdi (Render cold start), yoki internet aloqasi yo'q.`;
+
+        if (process.env.NODE_ENV !== "production") {
+            console.error(
+                `[API xatosi ${error.response?.status ?? "NO RESPONSE"}] ${originalRequest?.method?.toUpperCase() ?? ""} ${originalRequest?.url ?? ""}\n${message}`
+            );
+        }
+
+        const formattedError: ApiError = new Error(message);
+        formattedError.status = error.response?.status;
+        formattedError.detail = detail;
+        return Promise.reject(formattedError);
+    });
+
+export const registerRequest = (payload: RegisterPayload) =>
+    api.post<unknown, User>("/auth/register", payload);
+
+export async function loginRequest(payload: LoginPayload): Promise<User> {
+    const tokens = await api.post<unknown, AuthTokens>("/auth/login", payload);
+    setTokens(tokens);
+    return meRequest();
+}
+
+export const meRequest = () => api.get<unknown, User>("/auth/me");
+
+export async function logoutRequest() {
+    clearTokens();
+}
+
+export function getTours(params: Record<string, string | number | undefined> = {}) {
+    const filteredParams = Object.fromEntries(
+        Object.entries(params).filter(([, v]) => v !== undefined)
+    );
+    return api.get<unknown, PaginatedResponse<Tour>>("/tours", { params: filteredParams });
+}
+
+export const getTourBySlug = (slug: string, lang: string) =>
+    api.get<unknown, Tour>(`/tours/${slug}`, { params: { lang } });
+
+export const getCountries = () =>
+    api.get<unknown, Country[]>("/countries");
+
+export const getDestinations = (countrySlug?: string) =>
+    api.get<unknown, Destination[]>("/destinations", {
+        params: countrySlug ? { country_slug: countrySlug } : undefined,
+    });
+
+export interface CreateBookingPayload {
+    tour_id: string;
+    full_name: string;
+    email: string;
+    phone: string;
+    tour_date: string;
+    num_adults: number;
+    num_children: number;
+    notes?: string;
+}
+
+export const createBooking = (payload: CreateBookingPayload) =>
+    api.post<unknown, Booking>("/bookings", payload);
+
+export const initPayment = (bookingId: string, provider: "payme" | "click" | "stripe") =>
+    api.post<unknown, { payment_url: string; amount: string; currency: string }>(
+        "/payments/init",
+        { booking_id: bookingId, provider }
+    );
+
+export const getBookingByNumber = (bookingNumber: string) =>
+    api.get<unknown, Booking>(`/bookings/${bookingNumber}`);
+
+export const getMyBookings = () => api.get<unknown, Booking[]>("/bookings/my");
+
+export async function uploadReviewImage(file: File): Promise<{ url: string }> {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    return api.post<unknown, { url: string }>("/reviews/upload-image", formData, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+        },
+    });
+}
+
+export interface CreateReviewPayload {
+    tour_id: string;
+    rating: number;
+    text: string;
+    images: string[];
+    reviewer_country?: string;
+}
+
+export const createReview = (payload: CreateReviewPayload) =>
+    api.post<unknown, Review>("/reviews", payload);
+
+export const getReviews = (tourId: string) =>
+    api.get<unknown, Review[]>("/reviews", { params: { tour_id: tourId } });
+
+export interface UpdateSiteStatsPayload {
+    years_experience: number;
+}
+
+export interface UpdateProfilePayload {
+    full_name?: string;
+    email?: string;
+    phone?: string;
+    preferred_language?: "uz" | "ru" | "en";
+}
+
+export const getProfile = () => api.get<unknown, User>("/users/me");
+
+export const updateProfile = (payload: UpdateProfilePayload) =>
+    api.patch<unknown, User>("/users/me", payload);
+
+export const getUsers = () => api.get<unknown, User[]>("/users");
+
+export const getTourRaw = (slug: string) =>
+    api.get<unknown, AdminTourDetail>(`/tours/${slug}`);
+
+export const createTour = (payload: TourPayload) =>
+    api.post<unknown, Tour>("/tours", payload);
+
+export const updateTour = (tourId: string, payload: Partial<TourPayload>) =>
+    api.patch<unknown, Tour>(`/tours/${tourId}`, payload);
+
+export const deleteTour = (tourId: string) =>
+    api.delete<unknown, void>(`/tours/${tourId}`);
+
+export const getAllBookings = () => api.get<unknown, Booking[]>("/bookings");
+
+export const updateBookingStatus = (bookingId: string, status: Booking["status"]) =>
+    api.patch<unknown, Booking>(`/bookings/${bookingId}/status`, { status });
+
+export const autoCompleteBookings = () =>
+    api.post<unknown, { message: string }>("/bookings/auto-complete");
+
+export const getAllReviews = async (): Promise<Review[]> => {
+    const res = await api.get<unknown, Review[] | { items: Review[] }>("/reviews");
+    if (Array.isArray(res)) return res;
+    return res?.items ?? [];
+};
+
+export const deleteReview = (reviewId: string) =>
+    api.delete<unknown, void>(`/reviews/${reviewId}`);
+
+export interface CountryPayload {
+    name: LocalizedText;
+    slug: string;
+    cover_image?: string;
+}
+
+export const createCountry = (payload: CountryPayload) =>
+    api.post<unknown, Country>("/countries", payload);
+
+export const updateCountry = (countryId: string, payload: Partial<CountryPayload>) =>
+    api.patch<unknown, Country>(`/countries/${countryId}`, payload);
+
+export const deleteCountry = (countryId: string) =>
+    api.delete<unknown, void>(`/countries/${countryId}`);
+
+export interface DestinationPayload {
+    name: LocalizedText;
+    slug: string;
+    description?: string;
+    cover_image?: string;
+    country_id: string;
+}
+
+export const createDestination = (payload: DestinationPayload) =>
+    api.post<unknown, Destination>("/destinations", payload);
+
+export const updateDestination = (destinationId: string, payload: Partial<DestinationPayload>) =>
+    api.patch<unknown, Destination>(`/destinations/${destinationId}`, payload);
+
+export const deleteDestination = (destinationId: string) =>
+    api.delete<unknown, void>(`/destinations/${destinationId}`);
+
+export const getSiteStats = () =>
+    api.get<unknown, SiteStats>("/site-stats");
+
+export const updateSiteStats = (payload: UpdateSiteStatsPayload) =>
+    api.patch<unknown, SiteStats>("/site-stats", payload);
+
+export default api;
+
+export interface ContactMessagePayload {
+    name: string;
+    email: string;
+    message: string;
+    source: "contact" | "service";
+}
+
+export interface ContactMessage {
+    id: string;
+    name: string;
+    email: string;
+    message: string;
+    source: string;
+    is_read: boolean;
+    created_at: string;
+}
+
+export const sendContactMessage = (payload: ContactMessagePayload) =>
+    api.post<unknown, ContactMessage>("/contact-messages", payload);
+
+export const getContactMessages = () =>
+    api.get<unknown, ContactMessage[]>("/contact-messages");
+
+export const markMessageRead = (id: string) =>
+    api.patch<unknown, ContactMessage>(`/contact-messages/${id}`, { is_read: true });

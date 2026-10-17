@@ -1,0 +1,70 @@
+{
+  "hero": {
+    "eyebrow": "Shams Travel — quyosh yo'l ko'rsatadi",
+    "slide_1_title": "Quyosh bilan birga yo'lga",
+    "slide_1_subtitle": "Har tong yangi manzil, har kun yangi taassurot",
+    "slide_2_title": "Yorqin safarlar, iliq xotiralar",
+    "slide_2_subtitle": "Sizga mos yo'nalishni topamiz, qolganini biz uddalaymiz",
+    "slide_3_title": "Ufqdan ufqqacha",
+    "slide_3_subtitle": "Shaharlar, tog'lar va cho'llar — barchasi bir safarda",
+    "slide_4_title": "Tayyor tur yoki o'z yo'nalishingiz",
+    "slide_4_subtitle": "Xohlasangiz tayyorini tanlang, xohlasangiz birga yangisini tuzamiz",
+    "slide_5_title": "Kun botmasdan hammasi tayyor",
+    "slide_5_subtitle": "Bron, transport, joylashtirish va gid — tez va aniq",
+    "slide_6_title": "Keyingi nur — sizning safaringiz",
+    "slide_6_subtitle": "Bugun yozing, tez orada yo'lga chiqasiz",
+    "cta_primary": "Turlarni ko'rish",
+    "cta_secondary": "Bog'lanish",
+    "search_placeholder": "Qayerga yo'l olamiz?",
+    "search_button": "Qidirish",
+    "search_destinations_label": "Yo'nalishlar",
+    "search_tours_label": "Turlar",
+    "search_no_results": "Hech narsa topilmadi"
+  },
+  "popular": {
+    "eyebrow": "Tanlov",
+    "title": "Quyosh ostidagi eng yaxshi turlar",
+    "days_short": "kun",
+    "view": "Batafsil",
+    "view_all": "Barcha turlar",
+    "nights_short": "kecha"
+  },
+  "destinations": {
+    "eyebrow": "Manzillar",
+    "title": "Qaysi tomonga?",
+    "subtitle": "Quyosh qayoqqa chaqirsa, o'sha yoqqa",
+    "tours_count": "ta tur",
+    "explore": "Kashf etish",
+    "view_all": "Hamma manzillar"
+  },
+  "stats": {
+    "years": "yillik tajriba",
+    "satisfaction": "mamnun sayohatchi",
+    "adventures": "tashkil etilgan safar",
+    "travelers": "mehmon"
+  },
+  "testimonials": {
+    "eyebrow": "Fikrlar",
+    "title": "Mehmonlarimiz aytganlari"
+  },
+  "why": {
+    "eyebrow": "Nega Shams?",
+    "title": "Safaringiz yorug' bo'lishi uchun",
+    "i1_title": "Aniq narx",
+    "i1_text": "Hammasi oldindan kelishiladi — yo'lda kutilmagan to'lov bo'lmaydi.",
+    "i2_title": "Ishonchli jamoa",
+    "i2_text": "Tajribali yo'l boshlovchilar va tekshirilgan hamkorlar.",
+    "i3_title": "To'liq xizmat",
+    "i3_text": "Transport, joylashtirish, gid va sug'urta — bir joyda.",
+    "i4_title": "Doim aloqada",
+    "i4_text": "Safar davomida istalgan savolingizga tezda javob beramiz."
+  },
+  "cta": {
+    "title": "Safaringizni boshlaymizmi?",
+    "subtitle": "Qo'ng'iroq qiling yoki yozing — sizga mos safarni tanlaymiz.",
+    "phone": "Qo'ng'iroq",
+    "office": "Manzil",
+    "email": "Pochta",
+    "button": "Bog'lanish"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "nav": {
+    "home": "Home",
+    "tours": "Tours",
+    "about": "About Us",
+    "service": "Service",
+    "contact": "Contact",
+    "login": "Log in",
+    "book": "Book a tour",
+    "admin_panel": "Admin panel",
+    "profile": "My profile",
+    "logout": "Logout"
+  },
+  "footer": {
+    "about": "Shams Travel is a travel company that makes your trips bright and carefree.",
+    "quick_links": "Quick links",
+    "contact": "Contact",
+    "address": "Registan street, Samarkand",
+    "follow": "On social media",
+    "rights": "All rights reserved.",
+    "links": "Links",
+    "services": "Services"
+  }
+}

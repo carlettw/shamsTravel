@@ -1,0 +1,33 @@
+{
+  "eyebrow": "Xizmatlar",
+  "title": "Yo'lga chiqish uchun kerak bo'lgan hamma narsa",
+  "subtitle": "Rejalashtirishdan uyga qaytguncha biz yoningizdamiz",
+  "meta_title": "Xizmatlar — Shams Travel",
+  "meta_description": "Shams Travel xizmatlari: turlar, transport, viza yordami, sug'urta va korporativ safarlar.",
+  "items": {
+    "transportation": {
+      "title": "Transport",
+      "text": "Aeroport transferi, shaharlararo qatnov va shaxsiy avtomobil — malakali haydovchilar bilan."
+    },
+    "visa_support": {
+      "title": "Viza yordami",
+      "text": "Kerakli hujjatlar ro'yxati va rasmiylashtirishda amaliy yordam."
+    },
+    "tours": {
+      "title": "Turlar",
+      "text": "Guruhli yoki individual tayyor yo'nalishlar."
+    },
+    "itineraries": {
+      "title": "Shaxsiy marshrut",
+      "text": "Xohishingizga qarab kunma-kun reja tuzamiz."
+    },
+    "insurance": {
+      "title": "Sug'urta",
+      "text": "Sayohat sug'urtasi bilan xotirjam yuring."
+    },
+    "corporate": {
+      "title": "Korporativ safarlar",
+      "text": "Jamoa safari, konferensiya va tadbirlarni to'liq tashkil qilamiz."
+    }
+  }
+}

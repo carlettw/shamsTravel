@@ -1,0 +1,33 @@
+{
+  "eyebrow": "Services",
+  "title": "Everything you need to hit the road",
+  "subtitle": "From planning to coming home, we're beside you",
+  "meta_title": "Services — Shams Travel",
+  "meta_description": "Shams Travel services: tours, transport, visa support, insurance and corporate trips.",
+  "items": {
+    "transportation": {
+      "title": "Transport",
+      "text": "Airport transfers, intercity travel and private cars with skilled drivers."
+    },
+    "visa_support": {
+      "title": "Visa support",
+      "text": "A list of required documents and practical help with the paperwork."
+    },
+    "tours": {
+      "title": "Tours",
+      "text": "Ready-made group and individual routes."
+    },
+    "itineraries": {
+      "title": "Personal itinerary",
+      "text": "A day-by-day plan built around your wishes."
+    },
+    "insurance": {
+      "title": "Insurance",
+      "text": "Travel with peace of mind and travel insurance."
+    },
+    "corporate": {
+      "title": "Corporate trips",
+      "text": "Team trips, conferences and events organized end to end."
+    }
+  }
+}
